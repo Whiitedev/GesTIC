@@ -1,3 +1,77 @@
-.title{
-    
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #f9f9f9;
+  font-family: Arial, sans-serif;
+}
+
+/* Centra el título */
+.title {
+  text-align: center;
+  font-size: 28px;
+  font-weight: bold;
+  margin-top: 40px; /* separa el título del borde superior */
+  margin-bottom: 30px; /* espacio entre el título y el recuadro */
+}
+
+/* Contenedor del recuadro */
+.box {
+  display: flex;
+  justify-content: center; /* centra el formulario horizontalmente */
+}
+
+/* Recuadro (formulario) */
+.form {
+  width: 350px;
+  height: 500px;
+  background-color: #fff;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  border-radius: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+/* Imagen */
+.logo {
+  width: 250px;
+  height: 250px;
+  object-fit: contain;
+  margin-top: 10px;
+}
+
+/* Texto */
+.text {
+  text-align: center;
+  margin: 10px 0 20px 0;
+}
+
+/* Botonera */
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+
+}
+
+.log_in, .sign_in {
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 15px;
+  width: 80%;
+}
+
+.log_in {
+  background: #2FBFDE;
+  color: white;
+}
+
+.sign_in {
+  background: #e0e0e0;
+  color: #333;
+  margin-top: 15px;
 }
