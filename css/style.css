@@ -14,6 +14,12 @@ body {
 }
 
 .box {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+  padding: 40px;
+  max-width: 450px;
+  width: 100%;
   display: flex;
   justify-content: center;
 }
@@ -48,7 +54,9 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-
+  gap: 15px;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .log_in, .sign_in {
@@ -57,6 +65,7 @@ body {
   cursor: pointer;
   font-size: 15px;
   width: 80%;
+  
 }
 
 .log_in {
