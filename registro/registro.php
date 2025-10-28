@@ -123,7 +123,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <button type="submit">Registrarse</button>
         </form>
 
-        <p>¿Ya tienes cuenta? <a href="../login/login.php">Inicia sesión aquí</a></p>
+        <p>¿Ya tienes cuenta? <a href="../inicio_sesion/login.php">Inicia sesión aquí</a></p>
     </div>
 
     <script>
