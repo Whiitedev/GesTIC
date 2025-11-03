@@ -13,21 +13,9 @@ body {
   margin-bottom: 30px;
 }
 
-.box {
-  background: white;
-  border-radius: 15px;
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-  padding: 40px;
-  max-width: 450px;
-  width: 100%;
-  display: flex;
-  justify-content: center;
-}
-
 .form {
   width: 350px;
   height: 500px;
-  background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
   border-radius: 10px;
   box-sizing: border-box;
@@ -35,6 +23,7 @@ body {
   flex-direction: column;
   align-items: center;
   padding: 20px;
+  margin: 0 auto;
 }
 
 .logo {
@@ -54,18 +43,24 @@ body {
   flex-direction: column;
   align-items: center;
   width: 100%;
-  gap: 15px;
+  gap: 5px;
   width: 100%;
   margin-top: 10px;
 }
 
 .log_in, .sign_in {
-  padding: 10px;
+  display: block;
+  font-size: 16px;
+  text-align: center;
+  width: 100%;
+  padding: 14px;
   border-radius: 20px;
   cursor: pointer;
   font-size: 15px;
   width: 80%;
-  
+  text-decoration: none;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
 .log_in {
@@ -73,8 +68,18 @@ body {
   color: white;
 }
 
+.log_in:hover {
+  background: #259bb8;
+  transform: translateY(-2px);
+}
+
 .sign_in {
   background: #e0e0e0;
   color: #333;
   margin-top: 15px;
+}
+
+.sign_in:hover {
+  background: #d0d0d0;
+  transform: translateY(-2px);
 }
