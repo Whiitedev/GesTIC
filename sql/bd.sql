@@ -249,3 +249,16 @@ FROM solicitudes_robotica srob
 LEFT JOIN usuarios u ON srob.usuario_id = u.id
 LEFT JOIN kits_robotica kr ON srob.kit_id = kr.id
 LEFT JOIN usuarios admin ON srob.administrador_id = admin.id;
+
+-- Agregar campo de código de barras a kits_robotica si no existe
+ALTER TABLE kits_robotica ADD COLUMN codigo_barras VARCHAR(100) UNIQUE;
+
+-- Agregar campo para identificar quién agregó el recurso
+ALTER TABLE recursos_tic ADD COLUMN agregado_por INT;
+ALTER TABLE kits_robotica ADD COLUMN agregado_por INT;
+ALTER TABLE recursos_tic ADD FOREIGN KEY (agregado_por) REFERENCES usuarios(id);
+ALTER TABLE kits_robotica ADD FOREIGN KEY (agregado_por) REFERENCES usuarios(id);
+
+-- Agregar campo para fecha de adición
+ALTER TABLE recursos_tic ADD COLUMN fecha_adicion TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
+ALTER TABLE kits_robotica ADD COLUMN fecha_adicion TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
