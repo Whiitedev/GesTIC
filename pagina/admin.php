@@ -174,6 +174,7 @@ $stmt->close();
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/admin.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
@@ -203,9 +204,13 @@ $stmt->close();
                     <i class="fas fa-robot"></i>
                     Agregar Kit
                 </button>
-                <button class="nav-item">
+                <button class="nav-item" onclick="window.location.href='gestion_solicitudes.php'">
                     <i class="fas fa-clipboard-list"></i>
                     Gestionar Solicitudes
+                </button>
+                <button class="nav-item" onclick="window.location.href='gestion_usuarios.php'">
+                    <i class="fas fa-users"></i>
+                    Gestionar Usuarios
                 </button>
                 <a href="logout.php" class="nav-item">
                     <i class="fas fa-sign-out-alt"></i>
@@ -435,55 +440,274 @@ $stmt->close();
     </div>
 
     <script>
-        // Funciones para modales
-        function showModal(modalId) {
-            document.getElementById(modalId).style.display = 'block';
+    // =============================================
+    // SISTEMA HÍBRIDO DE ESCÁNER
+    // =============================================
+    class BarcodeScanner {
+        constructor() {
+            this.barcodeBuffer = '';
+            this.reading = false;
+            this.timeout = null;
+            this.html5QrcodeScanner = null;
         }
+        
+        // Inicializar escáner de cámara (HTML5 Barcode Reader)
+        initCameraScanner() {
+            const scannerPlaceholder = document.querySelector('.scanner-placeholder');
+            
+            scannerPlaceholder.innerHTML = `
+                <div id="reader" style="width: 100%; height: 100%;"></div>
+                <div style="text-align: center; margin-top: 10px;">
+                    <button class="btn" onclick="barcodeScanner.stopCameraScanner()">
+                        <i class="fas fa-stop"></i> Detener Cámara
+                    </button>
+                </div>
+            `;
 
-        function closeModal(modalId) {
-            document.getElementById(modalId).style.display = 'none';
-        }
+            this.html5QrcodeScanner = new Html5Qrcode("reader");
+            
+            const config = {
+                fps: 10,
+                qrbox: { width: 250, height: 150 }
+            };
 
-        // Cerrar modal al hacer clic fuera
-        window.onclick = function(event) {
-            document.querySelectorAll('.modal').forEach(modal => {
-                if (event.target == modal) {
-                    modal.style.display = 'none';
-                }
+            this.html5QrcodeScanner.start(
+                { facingMode: "environment" },
+                config,
+                (decodedText) => this.processScannedCode(decodedText),
+                (error) => console.log("Escaneando...", error)
+            ).catch(err => {
+                alert("Error al iniciar la cámara: " + err);
+                this.stopCameraScanner();
             });
         }
-
-        // Simulación de escáner (para implementación futura)
-        function initScanner() {
-            alert('🔍 Función de escáner de código de barras\n\nEsta funcionalidad requiere integrar una librería de escaneo como QuaggaJS o HTML5 Barcode Reader.\n\nPor ahora, usa la entrada manual de código.');
+        
+        // Inicializar detector de lector físico
+        initPhysicalScanner() {
+            document.addEventListener('keydown', (event) => {
+                this.handlePhysicalScannerInput(event);
+            });
+            
+            console.log("Detector de lector físico activado");
         }
-
-        function processBarcode(code) {
-            if (code.trim() === '') {
-                alert('Por favor ingresa un código de barras');
+        
+        // Manejar entrada del lector físico
+        handlePhysicalScannerInput(event) {
+            // Los lectores físicos suelen enviar los datos rápidamente
+            // Ignorar teclas de control excepto Enter
+            if (event.key === 'Enter') {
+                if (this.barcodeBuffer.length > 3) { // Mínimo 4 caracteres para ser un código válido
+                    this.processScannedCode(this.barcodeBuffer);
+                }
+                this.barcodeBuffer = '';
+                event.preventDefault();
                 return;
             }
             
-            alert('📦 Código de barras procesado: ' + code + '\n\nEn una implementación completa, aquí se buscaría en la base de datos o se agregaría un nuevo recurso.');
-            
-            // Limpiar campo
-            document.getElementById('codigo_manual').value = '';
+            // Solo capturar caracteres alfanuméricos y algunos símbolos comunes en códigos de barras
+            if (event.key.length === 1 && event.key.match(/[a-zA-Z0-9\-_\.]/)) {
+                this.barcodeBuffer += event.key;
+                
+                // Resetear el buffer después de un tiempo (para evitar acumulación)
+                clearTimeout(this.timeout);
+                this.timeout = setTimeout(() => {
+                    this.barcodeBuffer = '';
+                }, 500);
+            }
         }
-
-        // Generar código de barras automático al enfocar
-        document.addEventListener('DOMContentLoaded', function() {
-            const barcodeFields = document.querySelectorAll('input[placeholder*="Código único"]');
-            barcodeFields.forEach(field => {
-                field.addEventListener('focus', function() {
-                    if (!this.value) {
-                        // Generar código único simple (en producción usaría algo más robusto)
-                        const timestamp = Date.now().toString(36);
-                        const random = Math.random().toString(36).substr(2, 5);
-                        this.value = 'GES-' + timestamp + '-' + random.toUpperCase();
+        
+        // Procesar código escaneado (desde cámara o lector físico)
+        processScannedCode(code) {
+            console.log("Código escaneado:", code);
+            
+            // Mostrar notificación
+            this.showMessage('🔍 Código detectado: ' + code, 'info');
+            
+            // Verificar en la base de datos
+            this.checkBarcodeInDatabase(code);
+        }
+        
+        // Verificar código en la base de datos
+        checkBarcodeInDatabase(code) {
+            fetch('check_barcode.php?code=' + encodeURIComponent(code))
+                .then(response => response.json())
+                .then(data => {
+                    if (data.exists) {
+                        this.showMessage('✅ ' + data.nombre + ' (Ya existe en el sistema)', 'success');
+                        // Aquí podrías mostrar opciones para editar el recurso existente
+                    } else {
+                        this.showMessage('📦 Código nuevo detectado. Completa los datos del recurso:', 'success');
+                        // Llenar automáticamente el campo de código en los modales
+                        document.querySelector('input[name="codigo_barras_recurso"]').value = code;
+                        document.querySelector('input[name="codigo_barras_kit"]').value = code;
+                        // Mostrar modal para agregar nuevo recurso
+                        this.showModal('modalRecursos');
                     }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    this.showMessage('❌ Error al verificar el código en la base de datos', 'error');
                 });
+        }
+        
+        stopCameraScanner() {
+            if (this.html5QrcodeScanner) {
+                this.html5QrcodeScanner.stop().catch(err => {
+                    console.error("Error al detener cámara:", err);
+                });
+            }
+            this.restoreScannerInterface();
+        }
+        
+        restoreScannerInterface() {
+            const scannerPlaceholder = document.querySelector('.scanner-placeholder');
+            scannerPlaceholder.innerHTML = `
+                <div class="scanner-mode-selector" style="margin-bottom: 15px;">
+                    <button class="btn" onclick="barcodeScanner.initCameraScanner()" style="margin: 5px;">
+                        <i class="fas fa-camera"></i> Usar Cámara
+                    </button>
+                    <button class="btn" onclick="barcodeScanner.initPhysicalScannerOnly()" style="margin: 5px;">
+                        <i class="fas fa-keyboard"></i> Usar Lector Físico
+                    </button>
+                </div>
+                <div class="scanner-icon">
+                    <i class="fas fa-barcode"></i>
+                </div>
+                <div class="scanner-text">
+                    Elige el modo de escaneo
+                </div>
+                <small style="color: #94a3b8;">
+                    • <strong>Cámara:</strong> Escanea con la cámara del dispositivo<br>
+                    • <strong>Lector Físico:</strong> Conecta tu lector USB y escanea
+                </small>
+            `;
+        }
+        
+        // Modo solo lector físico (sin cámara)
+        initPhysicalScannerOnly() {
+            const scannerPlaceholder = document.querySelector('.scanner-placeholder');
+            scannerPlaceholder.innerHTML = `
+                <div class="scanner-icon" style="color: #10b981;">
+                    <i class="fas fa-keyboard"></i>
+                </div>
+                <div class="scanner-text">
+                    Lector Físico Activado
+                </div>
+                <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; margin: 10px 0; border: 1px solid #10b981;">
+                    <i class="fas fa-info-circle" style="color: #10b981;"></i>
+                    <small><strong>Conecta tu lector USB y escanea un código de barras</strong></small>
+                </div>
+                <small style="color: #94a3b8;">
+                    El sistema detectará automáticamente los códigos escaneados
+                </small>
+                <br>
+                <button class="btn" onclick="barcodeScanner.restoreScannerInterface()" style="margin-top: 15px;">
+                    <i class="fas fa-undo"></i> Cambiar Modo
+                </button>
+            `;
+            
+            this.initPhysicalScanner();
+        }
+        
+        showMessage(message, type) {
+            let messageDiv = document.getElementById('scanner-message');
+            if (!messageDiv) {
+                messageDiv = document.createElement('div');
+                messageDiv.id = 'scanner-message';
+                document.body.appendChild(messageDiv);
+            }
+            
+            const styles = {
+                success: 'background: #10b981;',
+                error: 'background: #ef4444;',
+                info: 'background: #3b82f6;'
+            };
+            
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                z-index: 10000;
+                max-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                ${styles[type] || styles.info}
+            `;
+            
+            messageDiv.innerHTML = message;
+            
+            setTimeout(() => {
+                if (messageDiv.parentNode) {
+                    messageDiv.parentNode.removeChild(messageDiv);
+                }
+            }, 5000);
+        }
+        
+        showModal(modalId) {
+            document.getElementById(modalId).style.display = 'block';
+        }
+    }
+
+    // =============================================
+    // FUNCIONES GLOBALES Y CONFIGURACIÓN
+    // =============================================
+
+    // Inicializar el sistema híbrido
+    const barcodeScanner = new BarcodeScanner();
+
+    // Función principal de inicialización (reemplaza la antigua initScanner)
+    function initScanner() {
+        barcodeScanner.restoreScannerInterface();
+    }
+
+    // Funciones para modales (mantener las existentes)
+    function showModal(modalId) {
+        document.getElementById(modalId).style.display = 'block';
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    // Cerrar modal al hacer clic fuera
+    window.onclick = function(event) {
+        document.querySelectorAll('.modal').forEach(modal => {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+    // Función para procesar código manual (entrada de texto)
+    function processBarcode(code) {
+        if (!code || code.trim() === '') {
+            barcodeScanner.showMessage('Por favor ingresa un código de barras válido', 'error');
+            return;
+        }
+        barcodeScanner.processScannedCode(code.trim());
+        // Limpiar campo después de procesar
+        document.getElementById('codigo_manual').value = '';
+    }
+
+    // Generar código de barras automático al enfocar
+    document.addEventListener('DOMContentLoaded', function() {
+        const barcodeFields = document.querySelectorAll('input[placeholder*="Código único"]');
+        barcodeFields.forEach(field => {
+            field.addEventListener('focus', function() {
+                if (!this.value) {
+                    // Generar código único simple
+                    const timestamp = Date.now().toString(36);
+                    const random = Math.random().toString(36).substr(2, 5);
+                    this.value = 'GES-' + timestamp + '-' + random.toUpperCase();
+                }
             });
         });
-    </script>
+
+        // Inicializar interfaz de escáner al cargar la página
+        barcodeScanner.restoreScannerInterface();
+    });
+</script>
 </body>
 </html>
