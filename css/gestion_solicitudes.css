@@ -1,0 +1,216 @@
+/* gestion_solicitudes.css - Estilos específicos para gestión de solicitudes */
+
+/* Estilos para pestañas */
+.tab-button {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 10px 15px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.tab-button.active {
+    background: #2FBFDE;
+    color: white;
+    border-color: #2FBFDE;
+}
+
+.tab-button:hover:not(.active) {
+    background: #e2e8f0;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Estilos para items de solicitud */
+.solicitud-item {
+    background: #f8fafc;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    border-left: 4px solid #3b82f6;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.solicitud-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.solicitud-item.recursos {
+    border-left-color: #8b5cf6;
+}
+
+.solicitud-item.robotica {
+    border-left-color: #f59e0b;
+}
+
+.solicitud-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.solicitud-info h4 {
+    margin: 0 0 8px 0;
+    color: #1e293b;
+    font-size: 16px;
+}
+
+.solicitud-info p {
+    margin: 0;
+    color: #64748b;
+    line-height: 1.4;
+}
+
+.solicitud-meta {
+    text-align: right;
+    color: #64748b;
+    font-size: 12px;
+    min-width: 120px;
+}
+
+.solicitud-actions {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 15px;
+}
+
+.solicitud-observaciones {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Estados de stock */
+.stock-insuficiente {
+    color: #dc2626;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.stock-ok {
+    color: #059669;
+    font-size: 12px;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+/* Badges para estados */
+.badge-estado {
+    padding: 4px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+    display: inline-block;
+    margin-left: 8px;
+}
+
+.badge-pendiente {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.badge-aprobada {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-rechazada {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+/* Contadores de pestañas */
+.tab-counter {
+    background: rgba(255,255,255,0.2);
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 11px;
+    margin-left: 5px;
+}
+
+/* Estados vacíos */
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: #64748b;
+}
+
+.empty-state i {
+    font-size: 3em;
+    color: #10b981;
+    margin-bottom: 15px;
+}
+
+.empty-state h3 {
+    margin: 0 0 10px 0;
+    color: #374151;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .solicitud-header {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .solicitud-meta {
+        text-align: left;
+        width: 100%;
+    }
+    
+    .solicitud-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .solicitud-observaciones {
+        margin-bottom: 10px;
+    }
+    
+    .tab-button {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+/* Animaciones */
+.solicitud-item {
+    animation: slideInUp 0.3s ease;
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
