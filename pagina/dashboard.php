@@ -25,11 +25,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['solicitar_notebooks'])
     $hora_inicio = $_POST['hora_inicio'];
     $hora_fin = $_POST['hora_fin'];
     $proposito = trim($_POST['proposito']);
-    
+
     if ($cantidad > 0 && $cantidad <= 20 && !empty($aula) && !empty($profesor)) {
         $stmt = $conn->prepare("INSERT INTO solicitudes_notebooks (usuario_id, cantidad_solicitada, aula_solicitante, profesor_encargado, fecha_uso, hora_inicio, hora_fin, proposito) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->bind_param("iissssss", $user_id, $cantidad, $aula, $profesor, $fecha_uso, $hora_inicio, $hora_fin, $proposito);
-        
+
         if ($stmt->execute()) {
             $message = "✅ Solicitud de notebooks enviada correctamente. Será revisada por un administrador.";
             $message_type = 'success';
@@ -50,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['solicitar_recurso'])) 
     $cantidad = intval($_POST['cantidad_recurso']);
     $fecha_uso = $_POST['fecha_uso_recurso'];
     $proposito = trim($_POST['proposito_recurso']);
-    
+
     if ($recurso_id > 0 && $cantidad > 0 && !empty($fecha_uso)) {
         // Verificar stock disponible
         $stmt = $conn->prepare("SELECT stock_disponible, nombre FROM recursos_tic WHERE id = ?");
@@ -59,11 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['solicitar_recurso'])) 
         $result = $stmt->get_result();
         $recurso = $result->fetch_assoc();
         $stmt->close();
-        
+
         if ($recurso && $cantidad <= $recurso['stock_disponible']) {
             $stmt = $conn->prepare("INSERT INTO solicitudes_recursos (usuario_id, recurso_id, cantidad_solicitada, fecha_uso, proposito) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("iiiss", $user_id, $recurso_id, $cantidad, $fecha_uso, $proposito);
-            
+
             if ($stmt->execute()) {
                 $message = "✅ Solicitud de {$recurso['nombre']} enviada correctamente.";
                 $message_type = 'success';
@@ -88,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['solicitar_robotica']))
     $cantidad = intval($_POST['cantidad_kit']);
     $fecha_uso = $_POST['fecha_uso_kit'];
     $proposito = trim($_POST['proposito_kit']);
-    
+
     if ($kit_id > 0 && $cantidad > 0 && !empty($fecha_uso)) {
         // Verificar stock disponible
         $stmt = $conn->prepare("SELECT stock_disponible, nombre FROM kits_robotica WHERE id = ?");
@@ -97,11 +97,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['solicitar_robotica']))
         $result = $stmt->get_result();
         $kit = $result->fetch_assoc();
         $stmt->close();
-        
+
         if ($kit && $cantidad <= $kit['stock_disponible']) {
             $stmt = $conn->prepare("INSERT INTO solicitudes_robotica (usuario_id, kit_id, cantidad_solicitada, fecha_uso, proposito) VALUES (?, ?, ?, ?, ?)");
             $stmt->bind_param("iiiss", $user_id, $kit_id, $cantidad, $fecha_uso, $proposito);
-            
+
             if ($stmt->execute()) {
                 $message = "✅ Solicitud de {$kit['nombre']} enviada correctamente.";
                 $message_type = 'success';
@@ -171,6 +171,7 @@ $stmt->close();
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -178,6 +179,7 @@ $stmt->close();
     <link rel="stylesheet" href="../css/dashboard.css">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="dashboard-container">
         <!-- Sidebar -->
@@ -187,7 +189,7 @@ $stmt->close();
                     <img src="../img/logo-sin-fondo.png" alt="GesTIC-logo">
                 </div>
             </div>
-            
+
             <div class="nav-section">
                 <button class="nav-item active" onclick="showSection('inicio')">
                     <i class="fas fa-home"></i>
@@ -209,111 +211,6 @@ $stmt->close();
                     <i class="fas fa-clipboard-list"></i>
                     Mis Solicitudes
                 </button>
-                <?php if ($user_tipo === 'administrativo' || $user_tipo === 'directivo'): ?>
-                <div id="gestion-usuarios" class="section">
-                    <div class="form-container">
-                        <h2 class="form-title">
-                            <i class="fas fa-users-cog"></i>
-                            Gestión de Usuarios
-                        </h2>
-        
-                        <?php
-                        // Obtener todos los usuarios
-                        $usuarios = [];
-                        $stmt = $conn->prepare("SELECT id, nombre, apellido, email, tipo, grado_seccion, materia, activo, fecha_registro FROM usuarios ORDER BY fecha_registro DESC");
-                        $stmt->execute();
-                        $result = $stmt->get_result();
-                        $usuarios = $result->fetch_all(MYSQLI_ASSOC);
-                        $stmt->close();
-        
-                        // Procesar eliminación de usuario
-                        if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['eliminar_usuario'])) {
-                            $usuario_a_eliminar = intval($_POST['usuario_id']);
-                            
-                            // No permitir eliminarse a sí mismo
-                            if ($usuario_a_eliminar != $user_id) {
-                                $stmt = $conn->prepare("DELETE FROM usuarios WHERE id = ?");
-                                $stmt->bind_param("i", $usuario_a_eliminar);
-                                
-                                if ($stmt->execute()) {
-                                    $message = "✅ Usuario eliminado correctamente.";
-                                    $message_type = 'success';
-                                    // Recargar la lista
-                                    header("Location: dashboard.php?section=gestion-usuarios");
-                                    exit();
-                                } else {
-                                    $message = "❌ Error al eliminar el usuario: " . $conn->error;
-                                    $message_type = 'error';
-                                }
-                                $stmt->close();
-                            } else {
-                                $message = "❌ No puedes eliminarte a ti mismo.";
-                                $message_type = 'error';
-                            }
-                        }
-                        ?>
-                        
-                        <div class="users-table-container">
-                            <div class="table-header">
-                                <h3>Usuarios Registrados (<?php echo count($usuarios); ?>)</h3>
-                                <div class="table-actions">
-                                    <input type="text" id="searchUsers" placeholder="Buscar usuarios..." class="search-input">
-                                </div>
-                            </div>
-                            
-                            <div class="table-responsive">
-                                <table class="users-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Nombre</th>
-                                            <th>Email</th>
-                                            <th>Tipo</th>
-                                            <th>Grado/Sección</th>
-                                            <th>Materia</th>
-                                            <th>Fecha Registro</th>
-                                            <th>Estado</th>
-                                            <th>Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($usuarios as $usuario): ?>
-                                        <tr>
-                                            <td><?php echo htmlspecialchars($usuario['nombre'] . ' ' . $usuario['apellido']); ?></td>
-                                            <td><?php echo htmlspecialchars($usuario['email']); ?></td>
-                                            <td>
-                                                <span class="user-type-badge <?php echo $usuario['tipo']; ?>">
-                                                    <?php echo ucfirst($usuario['tipo']); ?>
-                                                </span>
-                                            </td>
-                                            <td><?php echo htmlspecialchars($usuario['grado_seccion'] ?: 'N/A'); ?></td>
-                                            <td><?php echo htmlspecialchars($usuario['materia'] ?: 'N/A'); ?></td>
-                                            <td><?php echo date('d/m/Y', strtotime($usuario['fecha_registro'])); ?></td>
-                                            <td>
-                                                <span class="status-badge <?php echo $usuario['activo'] ? 'active' : 'inactive'; ?>">
-                                                    <?php echo $usuario['activo'] ? 'Activo' : 'Inactivo'; ?>
-                                                </span>
-                                            </td>
-                                            <td>
-                                                <?php if ($usuario['id'] != $user_id): ?>
-                                                <form method="POST" action="" style="display: inline;" onsubmit="return confirm('¿Estás seguro de que quieres eliminar este usuario? Esta acción no se puede deshacer.');">
-                                                    <input type="hidden" name="usuario_id" value="<?php echo $usuario['id']; ?>">
-                                                    <button type="submit" name="eliminar_usuario" class="btn-danger btn-sm">
-                                                        <i class="fas fa-trash"></i> Eliminar
-                                                    </button>
-                                                </form>
-                                                <?php else: ?>
-                                                <span class="text-muted">Tú</span>
-                                                <?php endif; ?>
-                                            </td>
-                                        </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <?php endif; ?>
                 <a href="../auth/logout.php" class="nav-item">
                     <i class="fas fa-sign-out-alt"></i>
                     Cerrar Sesión
@@ -377,6 +274,15 @@ $stmt->close();
                         <h3>Kits de Robótica</h3>
                         <p>Solicita kits completos para proyectos de robótica e IoT</p>
                     </div>
+                    <?php if ($user_tipo === 'administrativo'): ?>
+                        <div class="card" onclick="window.location.href='admin.php'">
+                            <div class="card-icon">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <h3>Panel de Administración</h3>
+                            <p>Gestión avanzada de recursos, código de barras y solicitudes</p>
+                        </div>
+                    <?php endif; ?>
                 </div>
             </div>
 
@@ -387,7 +293,7 @@ $stmt->close();
                         <i class="fas fa-laptop"></i>
                         Solicitud de Notebooks
                     </h2>
-                    
+
                     <form method="POST" action="">
                         <div class="form-grid">
                             <div class="form-group">
@@ -442,7 +348,7 @@ $stmt->close();
                         <i class="fas fa-microchip"></i>
                         Solicitud de Recursos TIC
                     </h2>
-                    
+
                     <form method="POST" action="" id="formRecursos">
                         <div class="form-group">
                             <label>Selecciona un Recurso *</label>
@@ -491,7 +397,7 @@ $stmt->close();
                         <i class="fas fa-robot"></i>
                         Solicitud de Kits de Robótica
                     </h2>
-                    
+
                     <form method="POST" action="" id="formRobotica">
                         <div class="form-group">
                             <label>Selecciona un Kit *</label>
@@ -553,10 +459,10 @@ $stmt->close();
             document.querySelectorAll('.section').forEach(section => {
                 section.classList.remove('active');
             });
-            
+
             // Mostrar la sección seleccionada
             document.getElementById(sectionId).classList.add('active');
-            
+
             // Actualizar navegación activa
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
@@ -571,7 +477,7 @@ $stmt->close();
             });
             document.getElementById('recurso-' + id).classList.add('selected');
             document.getElementById('recurso_id').value = id;
-            
+
             // Actualizar cantidad máxima
             const stock = parseInt(document.querySelector('#recurso-' + id + ' .resource-stock').textContent.match(/\d+/)[0]);
             document.getElementById('cantidad_recurso').max = stock;
@@ -584,7 +490,7 @@ $stmt->close();
             });
             document.getElementById('kit-' + id).classList.add('selected');
             document.getElementById('kit_id').value = id;
-            
+
             // Actualizar cantidad máxima
             const stock = parseInt(document.querySelector('#kit-' + id + ' .resource-stock').textContent.match(/\d+/)[0]);
             document.getElementById('cantidad_kit').max = stock;
@@ -599,4 +505,5 @@ $stmt->close();
         });
     </script>
 </body>
+
 </html>
