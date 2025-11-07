@@ -22,7 +22,7 @@ CREATE TABLE usuarios (
     apellido VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    tipo ENUM('profesor', 'alumno', 'directivo', 'administrativo') NOT NULL,
+    tipo ENUM('profesor', 'alumno', 'administrativo') NOT NULL,
     grado_seccion VARCHAR(50), -- Para alumnos: "4to A", "5to B", etc.
     materia VARCHAR(100), -- Para profesores
     activo BOOLEAN DEFAULT TRUE,
