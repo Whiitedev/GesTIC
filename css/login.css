@@ -10,20 +10,21 @@ body {
   justify-content: center;
 }
 
-.title {
-  text-align: center;
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: #333;
-  width: 100%;
+.logo {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  margin-bottom: 5px;
 }
 
 .container {
   width: 100%;
   max-width: 450px;
   padding: 20px;
+  margin-bottom: 150px;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
 }
 
 .box {
@@ -41,7 +42,7 @@ body {
 
 }
 
-.flex-column > label {
+.flex-column>label {
   color: #151717;
   font-weight: 600;
   margin-bottom: 8px;
@@ -89,7 +90,7 @@ body {
   margin: 10px 0;
 }
 
-.flex-row > div > label {
+.flex-row>div>label {
   font-size: 14px;
   color: black;
   font-weight: 400;

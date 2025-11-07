@@ -11,13 +11,11 @@ body {
   justify-content: center;
 }
 
-.title {
-  text-align: center;
-  font-size: 32px;
-  font-weight: bold;
-  margin-bottom: 30px;
-  color: #333;
-  width: 100%;
+.logo {
+  width: 200px;
+  height: 150px;
+  object-fit: contain;
+  margin-top: 5px;
 }
 
 .container {
@@ -25,6 +23,9 @@ body {
   max-width: 500px;
   padding: 20px;
   box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
 }
 
 .box {
@@ -39,7 +40,7 @@ body {
   margin-bottom: 20px;
 }
 
-.flex-column > label {
+.flex-column>label {
   color: #151717;
   font-weight: 600;
   margin-bottom: 8px;
@@ -60,7 +61,8 @@ body {
   border: 1.5px solid #2FBFDE;
 }
 
-.input, select {
+.input,
+select {
   margin-left: 10px;
   border-radius: 10px;
   border: none;
@@ -71,7 +73,8 @@ body {
   background: transparent;
 }
 
-.input:focus, select:focus {
+.input:focus,
+select:focus {
   outline: none;
 }
 
@@ -146,6 +149,7 @@ a:hover {
 }
 
 /* Campos adicionales */
-#gradoField, #materiaField {
+#gradoField,
+#materiaField {
   transition: all 0.3s ease-in-out;
 }
