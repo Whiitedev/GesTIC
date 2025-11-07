@@ -67,16 +67,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro - Sistema de Inventario</title>
+    <title>Registro - GesTIC</title>
     <link rel="stylesheet" href="../css/registro.css">
 </head>
 <body>
-    <h1 class="title">GesTIC</h1>
-    
+    <img src="../img/Logo-sin_fondo.png" class="logo" alt="logo">
     <div class="container">
         <div class="box">
             <h2 style="text-align: center; color: #333; margin-bottom: 30px;">Registro de Usuario</h2>
-            
             <?php if (!empty($errors)): ?>
                 <div class="error">
                     <?php foreach ($errors as $error): ?>
@@ -140,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <option value="">Seleccionar...</option>
                             <option value="alumno">Alumno</option>
                             <option value="profesor">Profesor</option>
-                            <option value="directivo">Directivo</option>
                             <option value="administrativo">Administrativo</option>
                         </select>
                     </div>
@@ -151,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label>Grado/Sección</label>
                     </div>
                     <div class="inputForm">
-                        <input type="text" name="grado_seccion" class="input" placeholder="Ej: 4to A, 5to B">
+                        <input type="text" name="grado_seccion" class="input" placeholder="Ej: 4to 2da, 5to 4ta">
                     </div>
                 </div>
 
