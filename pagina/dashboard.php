@@ -177,20 +177,48 @@ $stmt->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - GesTIC</title>
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="apple-touch-icon" sizes="57x57" href="../img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="../img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo-section">
-                <div class="logo">
-                    <img src="../img/logo-sin-fondo.png" alt="GesTIC-logo">
+        <!-- Header Horizontal -->
+        <header class="header-nav">
+            <div class="nav-top">
+                <div class="logo-section">
+                    <div>
+                        <img src="../img/Logo-sin_fondo.png" class="logo" alt="GesTIC-logo">
+                    </div>
+                </div>
+                
+                <div class="user-info">
+                    <span><?php echo htmlspecialchars($user_nombre); ?></span>
+                    <a href="../auth/logout.php" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </a>
                 </div>
             </div>
 
-            <div class="nav-section">
+            <!-- Navegación Horizontal -->
+            <nav class="nav-horizontal">
                 <button class="nav-item active" onclick="showSection('inicio')">
                     <i class="fas fa-home"></i>
                     Inicio
@@ -211,23 +239,11 @@ $stmt->close();
                     <i class="fas fa-clipboard-list"></i>
                     Mis Solicitudes
                 </button>
-                <a href="../auth/logout.php" class="nav-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Cerrar Sesión
-                </a>
-            </div>
-        </div>
+            </nav>
+        </header>
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Header -->
-            <div class="header">
-                <div class="welcome-section">
-                    <h1>Bienvenido, <?php echo htmlspecialchars($user_nombre); ?></h1>
-                    <p>Sistema de Gestión de Recursos TIC - <?php echo ucfirst($user_tipo); ?></p>
-                </div>
-            </div>
-
             <!-- Mensajes -->
             <?php if ($message): ?>
                 <div class="message <?php echo $message_type; ?>">
@@ -237,6 +253,11 @@ $stmt->close();
 
             <!-- Sección Inicio -->
             <div id="inicio" class="section active">
+                <div class="welcome-section">
+                    <h1>Bienvenido, <?php echo htmlspecialchars($user_nombre); ?></h1>
+                    <p>Sistema de Gestión de Recursos TIC - <?php echo ucfirst($user_tipo); ?></p>
+                </div>
+
                 <!-- Estadísticas -->
                 <div class="stats-grid">
                     <div class="stat-card">
@@ -286,6 +307,7 @@ $stmt->close();
                 </div>
             </div>
 
+            <!-- Las demás secciones (notebooks, recursos, robotica, estado) se mantienen exactamente igual -->
             <!-- Sección Solicitud de Notebooks -->
             <div id="notebooks" class="section">
                 <div class="form-container">
@@ -451,7 +473,6 @@ $stmt->close();
             </div>
         </div>
     </div>
-
     <script>
         // Navegación entre secciones
         function showSection(sectionId) {
@@ -505,5 +526,4 @@ $stmt->close();
         });
     </script>
 </body>
-
 </html>
