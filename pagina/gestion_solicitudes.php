@@ -137,23 +137,55 @@ $stmt->close();
     <title>Gestión de Solicitudes - GesTIC</title>
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/gestion_solicitudes.css">
+    <link rel="apple-touch-icon" sizes="57x57" href="../img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="../img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
+
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo-section">
-                <div class="logo">
-                    <i class="fas fa-laptop-code"></i>
-                    GesTIC
+        <!-- Header Horizontal -->
+        <header class="header-nav">
+            <div class="nav-top">
+                <div class="logo-section">
+                    <div>
+                        <img src="../img/Logo-sin_fondo.png" class="logo" alt="GesTIC-logo">
+                    </div>
+                </div>
+                
+                <div class="user-info">
+                    <span><?php echo htmlspecialchars($user_nombre); ?> (Admin)</span>
+                    <a href="../auth/logout.php" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </a>
                 </div>
             </div>
-            
-            <div class="nav-section">
+
+            <!-- Navegación Horizontal -->
+            <nav class="nav-horizontal">
                 <button class="nav-item" onclick="window.location.href='dashboard.php'">
-                    <i class="fas fa-home"></i>
+                    <i class="fas fa-arrow-left"></i>
                     Volver al Dashboard
+                </button>
+                <button class="nav-item" onclick="window.location.href='admin.php'">
+                    <i class="fas fa-cogs"></i>
+                    Panel Admin
                 </button>
                 <button class="nav-item" onclick="window.location.href='admin.php'">
                     <i class="fas fa-qrcode"></i>
@@ -175,24 +207,11 @@ $stmt->close();
                     <i class="fas fa-users"></i>
                     Gestionar Usuarios
                 </button>
-                <a href="logout.php" class="nav-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Cerrar Sesión
-                </a>
-            </div>
-        </div>
+            </nav>
+        </header>
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Header -->
-            <div class="admin-header">
-                <h1 class="admin-title">
-                    <i class="fas fa-clipboard-list"></i>
-                    Gestión de Solicitudes
-                </h1>
-                <p class="admin-subtitle">Revisa y gestiona todas las solicitudes pendientes</p>
-            </div>
-
             <!-- Mensajes -->
             <?php if ($message): ?>
                 <div class="message <?php echo $message_type; ?>">
@@ -200,196 +219,238 @@ $stmt->close();
                 </div>
             <?php endif; ?>
 
-            <!-- Pestañas de Solicitudes -->
-            <div class="admin-card">
-                <div style="display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid #e5e7eb;">
-                    <button class="btn tab-button active" onclick="showTab('notebooks')">
-                        <i class="fas fa-laptop"></i> Notebooks (<?php echo count($solicitudes_notebooks); ?>)
-                    </button>
-                    <button class="btn tab-button" onclick="showTab('recursos')">
-                        <i class="fas fa-microchip"></i> Recursos TIC (<?php echo count($solicitudes_recursos); ?>)
-                    </button>
-                    <button class="btn tab-button" onclick="showTab('robotica')">
-                        <i class="fas fa-robot"></i> Robótica (<?php echo count($solicitudes_robotica); ?>)
-                    </button>
+            <!-- Sección Principal -->
+            <div class="section active">
+                <div class="welcome-section">
+                    <h1>Gestión de Solicitudes</h1>
+                    <p>Revisa y gestiona todas las solicitudes pendientes del sistema</p>
                 </div>
 
-                <!-- Tab: Solicitudes de Notebooks -->
-                <div id="tab-notebooks" class="tab-content active">
-                    <?php if (empty($solicitudes_notebooks)): ?>
-                        <div style="text-align: center; padding: 40px; color: #64748b;">
-                            <i class="fas fa-check-circle" style="font-size: 3em; color: #10b981; margin-bottom: 15px;"></i>
-                            <h3>No hay solicitudes pendientes de notebooks</h3>
-                        </div>
-                    <?php else: ?>
-                        <?php foreach ($solicitudes_notebooks as $solicitud): ?>
-                        <div class="solicitud-item" style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #3b82f6;">
-                            <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 15px;">
-                                <div>
-                                    <h4 style="margin: 0 0 5px 0; color: #1e293b;">
-                                        <i class="fas fa-laptop"></i> Solicitud de <?php echo $solicitud['cantidad_solicitada']; ?> notebooks
-                                    </h4>
-                                    <p style="margin: 0; color: #64748b;">
-                                        <strong>Solicitante:</strong> <?php echo $solicitud['nombre'] . ' ' . $solicitud['apellido']; ?> 
-                                        (<?php echo $solicitud['usuario_tipo']; ?>)<br>
-                                        <strong>Fecha de uso:</strong> <?php echo $solicitud['fecha_uso']; ?> 
-                                        de <?php echo $solicitud['hora_inicio']; ?> a <?php echo $solicitud['hora_fin']; ?><br>
-                                        <strong>Aula:</strong> <?php echo $solicitud['aula_solicitante']; ?> 
-                                        | <strong>Profesor:</strong> <?php echo $solicitud['profesor_encargado']; ?>
-                                    </p>
-                                    <?php if (!empty($solicitud['proposito'])): ?>
-                                        <p style="margin: 10px 0 0 0; color: #475569;">
-                                            <strong>Propósito:</strong> <?php echo $solicitud['proposito']; ?>
-                                        </p>
-                                    <?php endif; ?>
-                                </div>
-                                <div style="text-align: right; color: #64748b; font-size: 12px;">
-                                    <?php echo date('d/m/Y H:i', strtotime($solicitud['fecha_solicitud'])); ?>
-                                </div>
-                            </div>
-                            
-                            <form method="POST" action="" style="display: flex; gap: 10px; align-items: center;">
-                                <input type="hidden" name="tipo_solicitud" value="notebooks">
-                                <input type="hidden" name="solicitud_id" value="<?php echo $solicitud['id']; ?>">
-                                
-                                <input type="text" name="observaciones" placeholder="Observaciones (opcional)" 
-                                       style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
-                                
-                                <button type="submit" name="accion_solicitud" value="aprobar" class="btn" 
-                                        style="background: #10b981;">
-                                    <i class="fas fa-check"></i> Aprobar
-                                </button>
-                                
-                                <button type="submit" name="accion_solicitud" value="rechazar" class="btn" 
-                                        style="background: #ef4444;">
-                                    <i class="fas fa-times"></i> Rechazar
-                                </button>
-                            </form>
-                        </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                <!-- Estadísticas Rápidas -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number"><?php echo count($solicitudes_notebooks); ?></div>
+                        <div class="stat-label">Solicitudes de Notebooks</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><?php echo count($solicitudes_recursos); ?></div>
+                        <div class="stat-label">Solicitudes de Recursos</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><?php echo count($solicitudes_robotica); ?></div>
+                        <div class="stat-label">Solicitudes de Robótica</div>
+                    </div>
                 </div>
 
-                <!-- Tab: Solicitudes de Recursos TIC -->
-                <div id="tab-recursos" class="tab-content">
-                    <?php if (empty($solicitudes_recursos)): ?>
-                        <div style="text-align: center; padding: 40px; color: #64748b;">
-                            <i class="fas fa-check-circle" style="font-size: 3em; color: #10b981; margin-bottom: 15px;"></i>
-                            <h3>No hay solicitudes pendientes de recursos TIC</h3>
-                        </div>
-                    <?php else: ?>
-                        <?php foreach ($solicitudes_recursos as $solicitud): ?>
-                        <div class="solicitud-item" style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #8b5cf6;">
-                            <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 15px;">
-                                <div>
-                                    <h4 style="margin: 0 0 5px 0; color: #1e293b;">
-                                        <i class="fas fa-microchip"></i> <?php echo $solicitud['recurso_nombre']; ?>
-                                    </h4>
-                                    <p style="margin: 0; color: #64748b;">
-                                        <strong>Solicitante:</strong> <?php echo $solicitud['nombre'] . ' ' . $solicitud['apellido']; ?><br>
-                                        <strong>Cantidad:</strong> <?php echo $solicitud['cantidad_solicitada']; ?> 
-                                        | <strong>Stock disponible:</strong> <?php echo $solicitud['stock_disponible']; ?><br>
-                                        <strong>Fecha de uso:</strong> <?php echo $solicitud['fecha_uso']; ?>
-                                    </p>
-                                    <?php if (!empty($solicitud['proposito'])): ?>
-                                        <p style="margin: 10px 0 0 0; color: #475569;">
-                                            <strong>Propósito:</strong> <?php echo $solicitud['proposito']; ?>
-                                        </p>
-                                    <?php endif; ?>
-                                </div>
-                                <div style="text-align: right; color: #64748b; font-size: 12px;">
-                                    <?php echo date('d/m/Y H:i', strtotime($solicitud['fecha_solicitud'])); ?>
-                                </div>
-                            </div>
-                            
-                            <form method="POST" action="" style="display: flex; gap: 10px; align-items: center;">
-                                <input type="hidden" name="tipo_solicitud" value="recursos">
-                                <input type="hidden" name="solicitud_id" value="<?php echo $solicitud['id']; ?>">
-                                
-                                <input type="text" name="observaciones" placeholder="Observaciones (opcional)" 
-                                       style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
-                                
-                                <button type="submit" name="accion_solicitud" value="aprobar" class="btn" 
-                                        style="background: #10b981;" 
-                                        <?php echo ($solicitud['cantidad_solicitada'] > $solicitud['stock_disponible']) ? 'disabled title="Stock insuficiente"' : ''; ?>>
-                                    <i class="fas fa-check"></i> Aprobar
-                                </button>
-                                
-                                <button type="submit" name="accion_solicitud" value="rechazar" class="btn" 
-                                        style="background: #ef4444;">
-                                    <i class="fas fa-times"></i> Rechazar
-                                </button>
-                            </form>
-                            
-                            <?php if ($solicitud['cantidad_solicitada'] > $solicitud['stock_disponible']): ?>
-                                <div style="color: #dc2626; font-size: 12px; margin-top: 5px;">
-                                    <i class="fas fa-exclamation-triangle"></i> Stock insuficiente
-                                </div>
-                            <?php endif; ?>
-                        </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
-                </div>
+                <!-- Pestañas de Solicitudes -->
+                <div class="form-container">
+                    <div class="tabs-header">
+                        <button class="tab-button active" onclick="showTab('notebooks')">
+                            <i class="fas fa-laptop"></i> 
+                            Notebooks 
+                            <span class="tab-counter"><?php echo count($solicitudes_notebooks); ?></span>
+                        </button>
+                        <button class="tab-button" onclick="showTab('recursos')">
+                            <i class="fas fa-microchip"></i> 
+                            Recursos TIC 
+                            <span class="tab-counter"><?php echo count($solicitudes_recursos); ?></span>
+                        </button>
+                        <button class="tab-button" onclick="showTab('robotica')">
+                            <i class="fas fa-robot"></i> 
+                            Robótica 
+                            <span class="tab-counter"><?php echo count($solicitudes_robotica); ?></span>
+                        </button>
+                    </div>
 
-                <!-- Tab: Solicitudes de Robótica -->
-                <div id="tab-robotica" class="tab-content">
-                    <?php if (empty($solicitudes_robotica)): ?>
-                        <div style="text-align: center; padding: 40px; color: #64748b;">
-                            <i class="fas fa-check-circle" style="font-size: 3em; color: #10b981; margin-bottom: 15px;"></i>
-                            <h3>No hay solicitudes pendientes de kits de robótica</h3>
-                        </div>
-                    <?php else: ?>
-                        <?php foreach ($solicitudes_robotica as $solicitud): ?>
-                        <div class="solicitud-item" style="background: #f8fafc; padding: 20px; border-radius: 8px; margin-bottom: 15px; border-left: 4px solid #f59e0b;">
-                            <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 15px;">
-                                <div>
-                                    <h4 style="margin: 0 0 5px 0; color: #1e293b;">
-                                        <i class="fas fa-robot"></i> <?php echo $solicitud['kit_nombre']; ?>
-                                    </h4>
-                                    <p style="margin: 0; color: #64748b;">
-                                        <strong>Solicitante:</strong> <?php echo $solicitud['nombre'] . ' ' . $solicitud['apellido']; ?><br>
-                                        <strong>Cantidad:</strong> <?php echo $solicitud['cantidad_solicitada']; ?> 
-                                        | <strong>Stock disponible:</strong> <?php echo $solicitud['stock_disponible']; ?><br>
-                                        <strong>Fecha de uso:</strong> <?php echo $solicitud['fecha_uso']; ?>
-                                    </p>
-                                    <?php if (!empty($solicitud['proposito'])): ?>
-                                        <p style="margin: 10px 0 0 0; color: #475569;">
-                                            <strong>Propósito:</strong> <?php echo $solicitud['proposito']; ?>
-                                        </p>
-                                    <?php endif; ?>
-                                </div>
-                                <div style="text-align: right; color: #64748b; font-size: 12px;">
-                                    <?php echo date('d/m/Y H:i', strtotime($solicitud['fecha_solicitud'])); ?>
-                                </div>
+                    <!-- Tab: Solicitudes de Notebooks -->
+                    <div id="tab-notebooks" class="tab-content active">
+                        <?php if (empty($solicitudes_notebooks)): ?>
+                            <div class="empty-state">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>No hay solicitudes pendientes de notebooks</h3>
+                                <p>Todas las solicitudes de notebooks han sido procesadas</p>
                             </div>
-                            
-                            <form method="POST" action="" style="display: flex; gap: 10px; align-items: center;">
-                                <input type="hidden" name="tipo_solicitud" value="robotica">
-                                <input type="hidden" name="solicitud_id" value="<?php echo $solicitud['id']; ?>">
-                                
-                                <input type="text" name="observaciones" placeholder="Observaciones (opcional)" 
-                                       style="flex: 1; padding: 8px; border: 1px solid #d1d5db; border-radius: 4px;">
-                                
-                                <button type="submit" name="accion_solicitud" value="aprobar" class="btn" 
-                                        style="background: #10b981;"
-                                        <?php echo ($solicitud['cantidad_solicitada'] > $solicitud['stock_disponible']) ? 'disabled title="Stock insuficiente"' : ''; ?>>
-                                    <i class="fas fa-check"></i> Aprobar
-                                </button>
-                                
-                                <button type="submit" name="accion_solicitud" value="rechazar" class="btn" 
-                                        style="background: #ef4444;">
-                                    <i class="fas fa-times"></i> Rechazar
-                                </button>
-                            </form>
-                            
-                            <?php if ($solicitud['cantidad_solicitada'] > $solicitud['stock_disponible']): ?>
-                                <div style="color: #dc2626; font-size: 12px; margin-top: 5px;">
-                                    <i class="fas fa-exclamation-triangle"></i> Stock insuficiente
+                        <?php else: ?>
+                            <?php foreach ($solicitudes_notebooks as $solicitud): ?>
+                            <div class="solicitud-item">
+                                <div class="solicitud-header">
+                                    <div class="solicitud-info">
+                                        <h4>
+                                            <i class="fas fa-laptop"></i> 
+                                            Solicitud de <?php echo $solicitud['cantidad_solicitada']; ?> notebooks
+                                        </h4>
+                                        <p>
+                                            <strong>Solicitante:</strong> <?php echo $solicitud['nombre'] . ' ' . $solicitud['apellido']; ?> 
+                                            (<?php echo $solicitud['usuario_tipo']; ?>)<br>
+                                            <strong>Fecha de uso:</strong> <?php echo $solicitud['fecha_uso']; ?> 
+                                            de <?php echo $solicitud['hora_inicio']; ?> a <?php echo $solicitud['hora_fin']; ?><br>
+                                            <strong>Aula:</strong> <?php echo $solicitud['aula_solicitante']; ?> 
+                                            | <strong>Profesor:</strong> <?php echo $solicitud['profesor_encargado']; ?>
+                                        </p>
+                                        <?php if (!empty($solicitud['proposito'])): ?>
+                                            <p class="proposito">
+                                                <strong>Propósito:</strong> <?php echo $solicitud['proposito']; ?>
+                                            </p>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="solicitud-meta">
+                                        <?php echo date('d/m/Y H:i', strtotime($solicitud['fecha_solicitud'])); ?>
+                                    </div>
                                 </div>
-                            <?php endif; ?>
-                        </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+                                
+                                <form method="POST" action="" class="solicitud-actions">
+                                    <input type="hidden" name="tipo_solicitud" value="notebooks">
+                                    <input type="hidden" name="solicitud_id" value="<?php echo $solicitud['id']; ?>">
+                                    
+                                    <input type="text" name="observaciones" placeholder="Observaciones (opcional)" 
+                                           class="solicitud-observaciones">
+                                    
+                                    <button type="submit" name="accion_solicitud" value="aprobar" class="btn" style="background: #10b981;">
+                                        <i class="fas fa-check"></i> Aprobar
+                                    </button>
+                                    
+                                    <button type="submit" name="accion_solicitud" value="rechazar" class="btn" style="background: #ef4444;">
+                                        <i class="fas fa-times"></i> Rechazar
+                                    </button>
+                                </form>
+                            </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Tab: Solicitudes de Recursos TIC -->
+                    <div id="tab-recursos" class="tab-content">
+                        <?php if (empty($solicitudes_recursos)): ?>
+                            <div class="empty-state">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>No hay solicitudes pendientes de recursos TIC</h3>
+                                <p>Todas las solicitudes de recursos TIC han sido procesadas</p>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($solicitudes_recursos as $solicitud): ?>
+                            <div class="solicitud-item recursos">
+                                <div class="solicitud-header">
+                                    <div class="solicitud-info">
+                                        <h4>
+                                            <i class="fas fa-microchip"></i> 
+                                            <?php echo $solicitud['recurso_nombre']; ?>
+                                        </h4>
+                                        <p>
+                                            <strong>Solicitante:</strong> <?php echo $solicitud['nombre'] . ' ' . $solicitud['apellido']; ?><br>
+                                            <strong>Cantidad:</strong> <?php echo $solicitud['cantidad_solicitada']; ?> 
+                                            | <strong>Stock disponible:</strong> <?php echo $solicitud['stock_disponible']; ?><br>
+                                            <strong>Fecha de uso:</strong> <?php echo $solicitud['fecha_uso']; ?>
+                                        </p>
+                                        <?php if (!empty($solicitud['proposito'])): ?>
+                                            <p class="proposito">
+                                                <strong>Propósito:</strong> <?php echo $solicitud['proposito']; ?>
+                                            </p>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="solicitud-meta">
+                                        <?php echo date('d/m/Y H:i', strtotime($solicitud['fecha_solicitud'])); ?>
+                                    </div>
+                                </div>
+                                
+                                <form method="POST" action="" class="solicitud-actions">
+                                    <input type="hidden" name="tipo_solicitud" value="recursos">
+                                    <input type="hidden" name="solicitud_id" value="<?php echo $solicitud['id']; ?>">
+                                    
+                                    <input type="text" name="observaciones" placeholder="Observaciones (opcional)" 
+                                           class="solicitud-observaciones">
+                                    
+                                    <button type="submit" name="accion_solicitud" value="aprobar" class="btn" 
+                                            style="background: #10b981;" 
+                                            <?php echo ($solicitud['cantidad_solicitada'] > $solicitud['stock_disponible']) ? 'disabled' : ''; ?>>
+                                        <i class="fas fa-check"></i> Aprobar
+                                    </button>
+                                    
+                                    <button type="submit" name="accion_solicitud" value="rechazar" class="btn" 
+                                            style="background: #ef4444;">
+                                        <i class="fas fa-times"></i> Rechazar
+                                    </button>
+                                </form>
+                                
+                                <?php if ($solicitud['cantidad_solicitada'] > $solicitud['stock_disponible']): ?>
+                                    <div class="stock-insuficiente">
+                                        <i class="fas fa-exclamation-triangle"></i> Stock insuficiente
+                                    </div>
+                                <?php else: ?>
+                                    <div class="stock-ok">
+                                        <i class="fas fa-check-circle"></i> Stock disponible
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
+
+                    <!-- Tab: Solicitudes de Robótica -->
+                    <div id="tab-robotica" class="tab-content">
+                        <?php if (empty($solicitudes_robotica)): ?>
+                            <div class="empty-state">
+                                <i class="fas fa-check-circle"></i>
+                                <h3>No hay solicitudes pendientes de kits de robótica</h3>
+                                <p>Todas las solicitudes de kits de robótica han sido procesadas</p>
+                            </div>
+                        <?php else: ?>
+                            <?php foreach ($solicitudes_robotica as $solicitud): ?>
+                            <div class="solicitud-item robotica">
+                                <div class="solicitud-header">
+                                    <div class="solicitud-info">
+                                        <h4>
+                                            <i class="fas fa-robot"></i> 
+                                            <?php echo $solicitud['kit_nombre']; ?>
+                                        </h4>
+                                        <p>
+                                            <strong>Solicitante:</strong> <?php echo $solicitud['nombre'] . ' ' . $solicitud['apellido']; ?><br>
+                                            <strong>Cantidad:</strong> <?php echo $solicitud['cantidad_solicitada']; ?> 
+                                            | <strong>Stock disponible:</strong> <?php echo $solicitud['stock_disponible']; ?><br>
+                                            <strong>Fecha de uso:</strong> <?php echo $solicitud['fecha_uso']; ?>
+                                        </p>
+                                        <?php if (!empty($solicitud['proposito'])): ?>
+                                            <p class="proposito">
+                                                <strong>Propósito:</strong> <?php echo $solicitud['proposito']; ?>
+                                            </p>
+                                        <?php endif; ?>
+                                    </div>
+                                    <div class="solicitud-meta">
+                                        <?php echo date('d/m/Y H:i', strtotime($solicitud['fecha_solicitud'])); ?>
+                                    </div>
+                                </div>
+                                
+                                <form method="POST" action="" class="solicitud-actions">
+                                    <input type="hidden" name="tipo_solicitud" value="robotica">
+                                    <input type="hidden" name="solicitud_id" value="<?php echo $solicitud['id']; ?>">
+                                    
+                                    <input type="text" name="observaciones" placeholder="Observaciones (opcional)" 
+                                           class="solicitud-observaciones">
+                                    
+                                    <button type="submit" name="accion_solicitud" value="aprobar" class="btn" 
+                                            style="background: #10b981;"
+                                            <?php echo ($solicitud['cantidad_solicitada'] > $solicitud['stock_disponible']) ? 'disabled' : ''; ?>>
+                                        <i class="fas fa-check"></i> Aprobar
+                                    </button>
+                                    
+                                    <button type="submit" name="accion_solicitud" value="rechazar" class="btn" 
+                                            style="background: #ef4444;">
+                                        <i class="fas fa-times"></i> Rechazar
+                                    </button>
+                                </form>
+                                
+                                <?php if ($solicitud['cantidad_solicitada'] > $solicitud['stock_disponible']): ?>
+                                    <div class="stock-insuficiente">
+                                        <i class="fas fa-exclamation-triangle"></i> Stock insuficiente
+                                    </div>
+                                <?php else: ?>
+                                    <div class="stock-ok">
+                                        <i class="fas fa-check-circle"></i> Stock disponible
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+                            <?php endforeach; ?>
+                        <?php endif; ?>
+                    </div>
                 </div>
             </div>
         </div>
