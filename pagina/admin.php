@@ -173,26 +173,58 @@ $stmt->close();
     <title>Panel de Administración - GesTIC</title>
     <link rel="stylesheet" href="../css/dashboard.css">
     <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="apple-touch-icon" sizes="57x57" href="../img/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="../img/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="../img/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="../img/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="../img/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="../img/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="../img/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="../img/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="../img/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="../img/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../img/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="../img/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../img/favicon/favicon-16x16.png">
+    <link rel="manifest" href="../img/favicon/manifest.json">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="../img/favicon/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://unpkg.com/html5-qrcode/minified/html5-qrcode.min.js"></script>
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Sidebar -->
-        <div class="sidebar">
-            <div class="logo-section">
-                <div class="logo">
-                    <i class="fas fa-laptop-code"></i>
-                    GesTIC
+        <!-- Header Horizontal -->
+        <header class="header-nav">
+            <div class="nav-top">
+                <div class="logo-section">
+                    <div>
+                        <img src="../img/Logo-sin_fondo.png" class="logo" alt="GesTIC-logo">
+                    </div>
+                </div>
+                
+                <div class="user-info">
+                    <span><?php echo htmlspecialchars($user_nombre); ?> (Admin)</span>
+                    <a href="../auth/logout.php" class="logout-btn">
+                        <i class="fas fa-sign-out-alt"></i>
+                        Cerrar Sesión
+                    </a>
                 </div>
             </div>
-            
-            <div class="nav-section">
+
+            <!-- Navegación Horizontal -->
+            <nav class="nav-horizontal">
                 <button class="nav-item" onclick="window.location.href='dashboard.php'">
-                    <i class="fas fa-home"></i>
+                    <i class="fas fa-arrow-left"></i>
                     Volver al Dashboard
                 </button>
-                <button class="nav-item active">
+                <button class="nav-item active" onclick="showSection('inicio')">
+                    <i class="fas fa-cogs"></i>
+                    Panel Admin
+                </button>
+                <button class="nav-item" onclick="showSection('escaner')">
                     <i class="fas fa-qrcode"></i>
                     Escanear Códigos
                 </button>
@@ -212,24 +244,11 @@ $stmt->close();
                     <i class="fas fa-users"></i>
                     Gestionar Usuarios
                 </button>
-                <a href="logout.php" class="nav-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    Cerrar Sesión
-                </a>
-            </div>
-        </div>
+            </nav>
+        </header>
 
         <!-- Main Content -->
         <div class="main-content">
-            <!-- Header -->
-            <div class="admin-header">
-                <h1 class="admin-title">
-                    <i class="fas fa-cogs"></i>
-                    Panel de Administración
-                </h1>
-                <p class="admin-subtitle">Gestión de recursos TIC y sistema de código de barras</p>
-            </div>
-
             <!-- Mensajes -->
             <?php if ($message): ?>
                 <div class="message <?php echo $message_type; ?>">
@@ -237,94 +256,123 @@ $stmt->close();
                 </div>
             <?php endif; ?>
 
-            <!-- Estadísticas Rápidas -->
-            <div class="stats-grid-admin">
-                <div class="stat-card-admin">
-                    <div class="stat-number-admin"><?php echo $total_recursos; ?></div>
-                    <div class="stat-label-admin">Recursos TIC</div>
+            <!-- Sección Inicio -->
+            <div id="inicio" class="section active">
+                <div class="welcome-section">
+                    <h1>Panel de Administración</h1>
+                    <p>Sistema de Gestión de Recursos TIC - Administrador</p>
                 </div>
-                <div class="stat-card-admin">
-                    <div class="stat-number-admin"><?php echo $total_kits; ?></div>
-                    <div class="stat-label-admin">Kits de Robótica</div>
+
+                <!-- Estadísticas -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number"><?php echo $total_recursos; ?></div>
+                        <div class="stat-label">Recursos TIC</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><?php echo $total_kits; ?></div>
+                        <div class="stat-label">Kits de Robótica</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number"><?php echo $solicitudes_pendientes; ?></div>
+                        <div class="stat-label">Solicitudes Pendientes</div>
+                    </div>
                 </div>
-                <div class="stat-card-admin">
-                    <div class="stat-number-admin"><?php echo $solicitudes_pendientes; ?></div>
-                    <div class="stat-label-admin">Solicitudes Pendientes</div>
+
+                <!-- Tarjetas de Acceso Rápido -->
+                <div class="cards-grid">
+                    <div class="card" onclick="showSection('escaner')">
+                        <div class="card-icon">
+                            <i class="fas fa-qrcode"></i>
+                        </div>
+                        <h3>Escanear Códigos</h3>
+                        <p>Sistema híbrido de escaneo con cámara y lectores físicos USB</p>
+                    </div>
+
+                    <div class="card" onclick="showModal('modalRecursos')">
+                        <div class="card-icon">
+                            <i class="fas fa-microchip"></i>
+                        </div>
+                        <h3>Agregar Recurso TIC</h3>
+                        <p>Registra nuevos recursos como Arduino, Raspberry Pi, sensores</p>
+                    </div>
+
+                    <div class="card" onclick="showModal('modalKits')">
+                        <div class="card-icon">
+                            <i class="fas fa-robot"></i>
+                        </div>
+                        <h3>Agregar Kit Robótica</h3>
+                        <p>Registra kits completos para proyectos de robótica e IoT</p>
+                    </div>
+
+                    <div class="card" onclick="window.location.href='gestion_solicitudes.php'">
+                        <div class="card-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h3>Gestionar Solicitudes</h3>
+                        <p>Revisa y aprueba solicitudes de notebooks y recursos</p>
+                    </div>
+
+                    <div class="card" onclick="window.location.href='gestion_usuarios.php'">
+                        <div class="card-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <h3>Gestionar Usuarios</h3>
+                        <p>Administra usuarios del sistema y sus permisos</p>
+                    </div>
+
+                    <div class="card" onclick="window.location.href='#'">
+                        <div class="card-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <h3>Reportes y Estadísticas</h3>
+                        <p>Genera reportes detallados del uso de recursos</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Grid de Funcionalidades -->
-            <div class="admin-grid">
-                <!-- Escáner de Códigos de Barras -->
-                <div class="admin-card">
-                    <h3 class="card-title">
-                        <i class="fas fa-camera"></i>
-                        Escáner de Códigos
-                    </h3>
-                    
-                    <div class="scanner-section">
-                        <div class="scanner-placeholder" onclick="initScanner()">
-                            <div class="scanner-icon">
-                                <i class="fas fa-barcode"></i>
-                            </div>
-                            <div class="scanner-text">
-                                Haz clic para activar la cámara
-                            </div>
-                            <small style="color: #94a3b8;">Escanea códigos de barras para agregar recursos rápidamente</small>
-                        </div>
-                    </div>
-
-                    <div class="manual-input">
-                        <label>O ingresa el código manualmente:</label>
-                        <div class="input-group">
-                            <input type="text" id="codigo_manual" class="form-control" placeholder="Código de barras">
-                            <button class="btn" onclick="processBarcode(document.getElementById('codigo_manual').value)">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
-                    </div>
+            <!-- Sección Escáner -->
+<div id="escaner" class="section">
+    <div class="form-container">
+        <h2 class="form-title">
+            <i class="fas fa-qrcode"></i>
+            Escáner de Códigos de Barras
+        </h2>
+        
+        <div class="scanner-section">
+            <div class="scanner-placeholder">
+                <div class="scanner-mode-selector">
+                    <button class="btn" onclick="barcodeScanner.initCameraScanner()">
+                        <i class="fas fa-camera"></i> Usar Cámara
+                    </button>
+                    <button class="btn" onclick="barcodeScanner.initPhysicalScannerOnly()">
+                        <i class="fas fa-keyboard"></i> Usar Lector Físico
+                    </button>
                 </div>
-
-                <!-- Acciones Rápidas -->
-                <div class="admin-card">
-                    <h3 class="card-title">
-                        <i class="fas fa-bolt"></i>
-                        Acciones Rápidas
-                    </h3>
-                    
-                    <div class="quick-actions">
-                        <div class="quick-action-btn" onclick="showModal('modalRecursos')">
-                            <i class="fas fa-microchip"></i>
-                            Nuevo Recurso
-                        </div>
-                        <div class="quick-action-btn" onclick="showModal('modalKits')">
-                            <i class="fas fa-robot"></i>
-                            Nuevo Kit
-                        </div>
-                        <div class="quick-action-btn" onclick="window.location.href='#'">
-                            <i class="fas fa-list"></i>
-                            Ver Inventario
-                        </div>
-                        <div class="quick-action-btn" onclick="window.location.href='#'">
-                            <i class="fas fa-chart-bar"></i>
-                            Reportes
-                        </div>
-                    </div>
-
-                    <div class="stats-grid-admin" style="margin-top: 25px;">
-                        <div class="stat-card-admin">
-                            <div class="stat-number-admin"><?php echo date('H:i'); ?></div>
-                            <div class="stat-label-admin">Hora Actual</div>
-                        </div>
-                        <div class="stat-card-admin">
-                            <div class="stat-number-admin"><?php echo date('d/m/Y'); ?></div>
-                            <div class="stat-label-admin">Fecha</div>
-                        </div>
-                    </div>
+                <div class="scanner-icon">
+                    <i class="fas fa-barcode"></i>
                 </div>
+                <div class="scanner-text">
+                    Elige el modo de escaneo
+                </div>
+                <small style="color: #94a3b8; text-align: center; display: block;">
+                    • <strong>Cámara:</strong> Escanea con la cámara del dispositivo<br>
+                    • <strong>Lector Físico:</strong> Conecta tu lector USB y escanea
+                </small>
+            </div>
+        </div>
+
+        <div class="manual-input">
+            <label>O ingresa el código manualmente:</label>
+            <div class="input-group">
+                <input type="text" id="codigo_manual" class="form-control" placeholder="Código de barras">
+                <button class="btn" onclick="processBarcode(document.getElementById('codigo_manual').value)">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
             </div>
         </div>
     </div>
+</div>
 
     <!-- Modal para Agregar Recurso TIC -->
     <div id="modalRecursos" class="modal">
@@ -559,14 +607,15 @@ $stmt->close();
             this.restoreScannerInterface();
         }
         
+        // En la clase BarcodeScanner, actualiza esta función:
         restoreScannerInterface() {
             const scannerPlaceholder = document.querySelector('.scanner-placeholder');
             scannerPlaceholder.innerHTML = `
-                <div class="scanner-mode-selector" style="margin-bottom: 15px;">
-                    <button class="btn" onclick="barcodeScanner.initCameraScanner()" style="margin: 5px;">
+                <div class="scanner-mode-selector">
+                    <button class="btn" onclick="barcodeScanner.initCameraScanner()">
                         <i class="fas fa-camera"></i> Usar Cámara
                     </button>
-                    <button class="btn" onclick="barcodeScanner.initPhysicalScannerOnly()" style="margin: 5px;">
+                    <button class="btn" onclick="barcodeScanner.initPhysicalScannerOnly()">
                         <i class="fas fa-keyboard"></i> Usar Lector Físico
                     </button>
                 </div>
@@ -576,7 +625,7 @@ $stmt->close();
                 <div class="scanner-text">
                     Elige el modo de escaneo
                 </div>
-                <small style="color: #94a3b8;">
+                <small style="color: #94a3b8; text-align: center; display: block;">
                     • <strong>Cámara:</strong> Escanea con la cámara del dispositivo<br>
                     • <strong>Lector Físico:</strong> Conecta tu lector USB y escanea
                 </small>
@@ -597,11 +646,11 @@ $stmt->close();
                     <i class="fas fa-info-circle" style="color: #10b981;"></i>
                     <small><strong>Conecta tu lector USB y escanea un código de barras</strong></small>
                 </div>
-                <small style="color: #94a3b8;">
+                <small style="color: #94a3b8; text-align: center;">
                     El sistema detectará automáticamente los códigos escaneados
                 </small>
                 <br>
-                <button class="btn" onclick="barcodeScanner.restoreScannerInterface()" style="margin-top: 15px;">
+                <button class="btn" onclick="event.stopPropagation(); barcodeScanner.restoreScannerInterface();" style="margin-top: 15px;">
                     <i class="fas fa-undo"></i> Cambiar Modo
                 </button>
             `;
@@ -660,6 +709,23 @@ $stmt->close();
     // Función principal de inicialización (reemplaza la antigua initScanner)
     function initScanner() {
         barcodeScanner.restoreScannerInterface();
+    }
+
+    // Navegación entre secciones
+    function showSection(sectionId) {
+        // Ocultar todas las secciones
+        document.querySelectorAll('.section').forEach(section => {
+            section.classList.remove('active');
+        });
+
+        // Mostrar la sección seleccionada
+        document.getElementById(sectionId).classList.add('active');
+
+        // Actualizar navegación activa
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        event.target.classList.add('active');
     }
 
     // Funciones para modales (mantener las existentes)
