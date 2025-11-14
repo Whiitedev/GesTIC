@@ -1,5 +1,15 @@
 /* gestion_solicitudes.css - Estilos específicos para gestión de solicitudes */
 
+/* Header de pestañas */
+.tabs-header {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 15px;
+    flex-wrap: wrap;
+}
+
 /* Estilos para pestañas */
 .tab-button {
     background: #f8fafc;
@@ -8,8 +18,13 @@
     border-radius: 6px;
     cursor: pointer;
     transition: all 0.3s ease;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    border: none;
+    font-family: inherit;
 }
 
 .tab-button.active {
@@ -39,7 +54,7 @@
 /* Estilos para items de solicitud */
 .solicitud-item {
     background: #f8fafc;
-    padding: 20px;
+    padding: 18px;
     border-radius: 8px;
     margin-bottom: 15px;
     border-left: 4px solid #3b82f6;
@@ -65,25 +80,40 @@
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 15px;
+    gap: 15px;
 }
 
 .solicitud-info h4 {
     margin: 0 0 8px 0;
     color: #1e293b;
-    font-size: 16px;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .solicitud-info p {
     margin: 0;
     color: #64748b;
     line-height: 1.4;
+    font-size: 13px;
+}
+
+.proposito {
+    margin: 10px 0 0 0 !important;
+    color: #475569 !important;
+    padding: 8px;
+    background: rgba(255,255,255,0.7);
+    border-radius: 4px;
+    border-left: 3px solid #2FBFDE;
 }
 
 .solicitud-meta {
     text-align: right;
     color: #64748b;
-    font-size: 12px;
-    min-width: 120px;
+    font-size: 11px;
+    min-width: 100px;
+    flex-shrink: 0;
 }
 
 .solicitud-actions {
@@ -98,14 +128,15 @@
     padding: 8px;
     border: 1px solid #d1d5db;
     border-radius: 4px;
-    font-size: 14px;
+    font-size: 13px;
+    font-family: inherit;
 }
 
 /* Estados de stock */
 .stock-insuficiente {
     color: #dc2626;
-    font-size: 12px;
-    margin-top: 5px;
+    font-size: 11px;
+    margin-top: 8px;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -113,8 +144,8 @@
 
 .stock-ok {
     color: #059669;
-    font-size: 12px;
-    margin-top: 5px;
+    font-size: 11px;
+    margin-top: 8px;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -154,6 +185,10 @@
     margin-left: 5px;
 }
 
+.tab-button.active .tab-counter {
+    background: rgba(255,255,255,0.3);
+}
+
 /* Estados vacíos */
 .empty-state {
     text-align: center;
@@ -162,7 +197,7 @@
 }
 
 .empty-state i {
-    font-size: 3em;
+    font-size: 2.5em;
     color: #10b981;
     margin-bottom: 15px;
 }
@@ -170,10 +205,24 @@
 .empty-state h3 {
     margin: 0 0 10px 0;
     color: #374151;
+    font-size: 18px;
+}
+
+.empty-state p {
+    margin: 0;
+    font-size: 14px;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
+    .tabs-header {
+        flex-direction: column;
+    }
+    
+    .tab-button {
+        justify-content: center;
+    }
+    
     .solicitud-header {
         flex-direction: column;
         gap: 10px;
@@ -195,6 +244,20 @@
     
     .tab-button {
         padding: 8px 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .solicitud-item {
+        padding: 15px;
+    }
+    
+    .solicitud-info h4 {
+        font-size: 14px;
+    }
+    
+    .solicitud-info p {
         font-size: 12px;
     }
 }

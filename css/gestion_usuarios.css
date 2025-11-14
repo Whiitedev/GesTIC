@@ -57,6 +57,7 @@
     border-radius: 12px;
     box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     overflow: hidden;
+    margin-top: 20px;
 }
 
 .tabla-usuarios {
@@ -99,6 +100,9 @@
     font-weight: 600;
     color: #1e293b;
     margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .usuario-email {
@@ -112,6 +116,13 @@
     font-size: 12px;
 }
 
+/* Formulario tipo usuario */
+.form-tipo-usuario {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
 /* Tipo de usuario */
 .select-tipo {
     padding: 6px 8px;
@@ -121,6 +132,7 @@
     min-width: 120px;
     background: white;
     cursor: pointer;
+    font-family: inherit;
 }
 
 .select-tipo:disabled {
@@ -151,6 +163,8 @@
     background: #f3f4f6;
     color: #6b7280;
     font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 8px;
 }
 
 /* Acciones */
@@ -170,6 +184,8 @@
     display: flex;
     align-items: center;
     gap: 4px;
+    font-family: inherit;
+    text-decoration: none;
 }
 
 .btn-accion:hover {
@@ -280,6 +296,12 @@
     .btn-accion {
         justify-content: center;
     }
+    
+    .tabla-usuarios th,
+    .tabla-usuarios td {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -289,8 +311,18 @@
     
     .tabla-usuarios th,
     .tabla-usuarios td {
-        padding: 10px 8px;
+        padding: 10px 6px;
         font-size: 12px;
+    }
+    
+    .select-tipo {
+        min-width: 100px;
+        font-size: 11px;
+    }
+    
+    .btn-accion {
+        font-size: 10px;
+        padding: 5px 8px;
     }
 }
 
